@@ -6,6 +6,7 @@ dependencies:
 - text
 - containers
 - mtl
+- parsec
 
 library:
   source-dirs: src
