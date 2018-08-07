@@ -1,0 +1,54 @@
+-- This file has been generated from package.yaml by hpack version 0.28.2.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 0474c6ed6ebe84f6f24d4f9f65fecea9a10ce6556152d65bcb50944ab6ac69d5
+
+name:           wys
+version:        0.1.0.0
+build-type:     Simple
+cabal-version:  >= 1.10
+
+library
+  exposed-modules:
+      Main
+  other-modules:
+      Paths_wys
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+    , containers
+    , mtl
+    , text
+  default-language: Haskell2010
+
+executable wys
+  main-is: Main.hs
+  other-modules:
+      Paths_wys
+  hs-source-dirs:
+      src
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -main-is Main
+  build-depends:
+      base >=4.7 && <5
+    , containers
+    , mtl
+    , text
+  default-language: Haskell2010
+
+test-suite wys-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_wys
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , containers
+    , mtl
+    , text
+    , wys
+  default-language: Haskell2010
