@@ -12,7 +12,7 @@ main = do
 
 readExpression :: String -> String
 readExpression input =
-  case parse (parseLString) "lisp" input of
+  case parse parseExpression "lisp" input of
     Right val -> "Found value: " ++ show val
     Left err -> "No match: " ++ show err
 
@@ -26,15 +26,31 @@ data LispVal
   | LBool Bool
   deriving (Eq, Show)
 
+parseExpression :: Parser LispVal
+parseExpression = parseString <|> parseAtom <|> parseNumber
+
+parseString :: Parser LispVal
+parseString = do
+  char '"'
+  x <- many (noneOf "\"")
+  char '"'
+  return $ LString x
+
+parseAtom :: Parser LispVal
+parseAtom = do
+  first <- letter <|> symbol
+  rest <- many (letter <|> digit <|> symbol)
+  return $
+    case (first : rest) of
+      "#t" -> LBool True
+      "#f" -> LBool False
+      other -> Atom other
+
+parseNumber :: Parser LispVal
+parseNumber = fmap (LNumber . read) (many digit)
+
 symbol :: Parser Char
 symbol = oneOf "!#$%&|*+-/:<=>?@^_~"
 
 spaces :: Parser ()
 spaces = skipMany1 space
-
-parseLString :: Parser LispVal
-parseLString = do
-  char '"'
-  x <- many (noneOf "\"")
-  char '"'
-  return $ LString x
