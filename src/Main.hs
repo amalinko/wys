@@ -32,9 +32,11 @@ parseExpression = parseString <|> parseAtom <|> parseNumber
 parseString :: Parser LispVal
 parseString = do
   char '"'
-  x <- many (noneOf "\"")
+  x <- many (escaped <|> noneOf "\"\\")
   char '"'
   return $ LString x
+  where
+    escaped = char '\\' >> oneOf "\\\""
 
 parseAtom :: Parser LispVal
 parseAtom = do
