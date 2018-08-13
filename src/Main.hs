@@ -13,7 +13,7 @@ main = do
 readExpression :: String -> String
 readExpression input =
   case parse parseExpression "lisp" input of
-    Right val -> "Found value: " ++ show val
+    Right val -> "Found value"
     Left err -> "No match: " ++ show err
 
 data LispVal
@@ -27,7 +27,30 @@ data LispVal
   deriving (Eq, Show)
 
 parseExpression :: Parser LispVal
-parseExpression = parseString <|> parseAtom <|> parseNumber
+parseExpression =
+  parseAtom <|> parseString <|> parseNumber <|> parseQuoted <|> parseListOrDottedList
+
+parseListOrDottedList :: Parser LispVal
+parseListOrDottedList = do
+  char '('
+  x <- try parseList <|> parseDottedList
+  char ')'
+  return x
+
+parseList :: Parser LispVal
+parseList = fmap List (sepBy parseExpression spaces)
+
+parseDottedList :: Parser LispVal
+parseDottedList = do
+  head <- endBy parseExpression spaces
+  tail <- char '.' >> spaces >> parseExpression
+  return $ DottedList head tail
+
+parseQuoted :: Parser LispVal
+parseQuoted = do
+  char '\''
+  x <- parseExpression
+  return $ List [Atom "quote", x]
 
 parseString :: Parser LispVal
 parseString = do
