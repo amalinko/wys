@@ -13,7 +13,7 @@ main = do
 readExpression :: String -> String
 readExpression input =
   case parse parseExpression "lisp" input of
-    Right val -> "Found value"
+    Right val -> "Found value: " ++ show val
     Left err -> "No match: " ++ show err
 
 data LispVal
@@ -24,7 +24,21 @@ data LispVal
   | LNumber Int
   | LString String
   | LBool Bool
-  deriving (Eq, Show)
+  deriving (Eq)
+
+instance Show LispVal where show = showVal
+
+showVal :: LispVal -> String
+showVal (LString s) = "\"" ++ s ++ "\""
+showVal (LBool True) = "#t"
+showVal (LBool False) = "#f"
+showVal (LNumber n) = show n
+showVal (List contents) = "(" ++ unwordsList contents ++ ")"
+showVal (DottedList head tail) = "(" ++ unwordsList head ++ " . " ++ showVal tail ++ ")"
+showVal (Atom name) = name
+
+unwordsList :: [LispVal] -> String
+unwordsList = unwords . map showVal
 
 parseExpression :: Parser LispVal
 parseExpression =
