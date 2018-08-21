@@ -1,6 +1,6 @@
 module Main where
 
-import AdtNaive
+import Gadt
 
 main :: IO ()
 main = run
