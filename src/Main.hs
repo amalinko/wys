@@ -1,11 +1,8 @@
 module Main where
 
-import TypedInterpreters
+import AdtNaive
 
 main :: IO ()
-main = do
-  putStrLn "ok"
-  putStrLn $ view $ exp1 22
-  putStrLn $ show $ calculate $ exp1 22
+main = run
 
 
